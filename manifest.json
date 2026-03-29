@@ -1,0 +1,24 @@
+{
+  "name": "Crikey! Melbourne Move Planner",
+  "short_name": "Crikey!",
+  "description": "Steve Irwin's guide to moving to Melbourne",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff4ee",
+  "theme_color": "#526047",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

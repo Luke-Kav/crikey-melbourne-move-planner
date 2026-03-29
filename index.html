@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crikey! Melbourne Move Planner</title>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#526047"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Crikey!"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;700;800;900&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#526047",
+        "surface-container": "#f7e5d8",
+        "inverse-primary": "#efffde",
+        "on-surface": "#362d26",
+        "surface-variant": "#edd9cb",
+        "on-tertiary-container": "#523700",
+        "surface": "#fff4ee",
+        "tertiary-fixed-dim": "#eda600",
+        "error-container": "#f95630",
+        "on-primary-fixed-variant": "#58654c",
+        "outline": "#81756b",
+        "on-error-container": "#520c00",
+        "secondary-fixed-dim": "#ecc479",
+        "inverse-on-surface": "#a89a91",
+        "on-secondary-fixed-variant": "#6c500f",
+        "surface-tint": "#526047",
+        "error": "#b02500",
+        "surface-dim": "#e5d1c2",
+        "surface-container-low": "#ffeee1",
+        "tertiary-container": "#feb300",
+        "on-primary-container": "#4e5b42",
+        "outline-variant": "#b9aba0",
+        "on-tertiary": "#fff1df",
+        "inverse-surface": "#140d07",
+        "primary-fixed-dim": "#d3e2c2",
+        "on-error": "#ffefec",
+        "error-dim": "#b92902",
+        "tertiary-fixed": "#feb300",
+        "surface-container-highest": "#edd9cb",
+        "on-primary-fixed": "#3c4831",
+        "background": "#fff4ee",
+        "surface-container-high": "#f2dfd1",
+        "surface-container-lowest": "#ffffff",
+        "primary-fixed": "#e1f0d0",
+        "on-secondary-fixed": "#4a3400",
+        "secondary-container": "#fbd185",
+        "on-background": "#362d26",
+        "on-primary": "#e9f8d8",
+        "primary-dim": "#47543c",
+        "tertiary": "#7b5400",
+        "tertiary-dim": "#6b4900",
+        "surface-bright": "#fff4ee",
+        "on-secondary": "#fff1dd",
+        "on-tertiary-fixed": "#382400",
+        "secondary-dim": "#674b0a",
+        "secondary-fixed": "#fbd185",
+        "on-surface-variant": "#645951",
+        "secondary": "#745716",
+        "on-secondary-container": "#624604",
+        "on-tertiary-fixed-variant": "#5e4000",
+        "primary-container": "#e1f0d0"
+      },
+      fontFamily: {
+        "headline": ["Epilogue"],
+        "body": ["Manrope"],
+        "label": ["Space Grotesk"]
+      },
+      borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+    },
+  },
+}
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .timeline-line {
+    background: repeating-linear-gradient(to bottom, #81756b 0, #81756b 10px, transparent 10px, transparent 20px);
+  }
+  .bg-outback-texture {
+    background-image: radial-gradient(#b9aba0 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+  }
+  .page { display: none; }
+  .page.active { display: block; }
+  body { min-height: 100dvh; }
+</style>
+</head>
+
+<body class="bg-surface font-body text-on-surface">
+
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-[#fff4ee] flex justify-between items-center w-full px-6 py-4">
+  <div class="flex items-center gap-4">
+    <span class="material-symbols-outlined text-primary text-2xl">menu</span>
+    <h1 class="font-headline font-black uppercase tracking-tighter text-2xl italic text-primary">Crikey!</h1>
+  </div>
+  <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center border-2 border-primary overflow-hidden">
+    <img class="w-full h-full object-cover" src="./steve.jpg" alt="Steve Irwin"/>
+  </div>
+</header>
+
+<!-- ==================== PAGE: TASKS ==================== -->
+<div id="page-tasks" class="page active">
+<main class="max-w-4xl mx-auto px-6 pt-8 pb-32">
+  <!-- Steve Irwin Hero Banner -->
+  <section class="mb-10 bg-primary rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-dim/80 to-primary/40 z-0"></div>
+    <div class="relative z-10 w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-on-primary/20 shadow-xl shrink-0 rotate-2">
+      <img class="w-full h-full object-cover" src="./steve.jpg" alt="Steve Irwin at Australia Zoo"/>
+    </div>
+    <div class="relative z-10 text-center md:text-left">
+      <p class="font-label text-xs uppercase tracking-[0.3em] text-primary-fixed/70 mb-2">Your Moving Guide</p>
+      <h2 class="font-headline font-black text-3xl md:text-4xl text-on-primary leading-tight italic mb-3">"Crikey mate, we're relocating to Melbourne!"</h2>
+      <p class="text-primary-fixed/80 font-body text-sm max-w-md">G'day! Steve Irwin here. I've wrangled crocs, snakes, and spiders—but nothing's wilder than moving house. Let's tackle this adventure together!</p>
+    </div>
+    <div class="absolute -bottom-6 -right-6 opacity-10">
+      <span class="material-symbols-outlined text-[140px]">pets</span>
+    </div>
+  </section>
+
+  <!-- Hero Progress -->
+  <section class="mb-12">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <div class="max-w-md">
+        <span class="font-label text-secondary uppercase tracking-widest text-sm mb-2 block">Steve's Melbourne Expedition</span>
+        <h2 class="font-headline font-black text-5xl text-on-surface leading-none mb-4">Crikey, We're Movin'!</h2>
+      </div>
+      <div class="font-label text-primary font-bold text-xl"><span id="progress-pct">0%</span> <span class="text-outline-variant">WRANGLED</span></div>
+    </div>
+    <div class="h-6 w-full bg-surface-container-highest rounded-full overflow-hidden flex items-center p-1 border-2 border-primary/10">
+      <div id="progress-bar" class="h-full bg-primary rounded-full flex items-center justify-end px-2" style="width: 0%">
+        <span class="material-symbols-outlined text-inverse-primary text-sm" style="font-variation-settings: 'FILL' 1;">explore</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Grid Tasks -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <!-- Featured Task -->
+    <div class="md:col-span-8 bg-surface-container rounded-xl p-8 relative overflow-hidden group">
+      <div class="absolute top-0 right-0 p-4">
+        <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
+      </div>
+      <div class="relative z-10">
+        <h3 class="font-headline font-bold text-3xl mb-4 text-on-surface">Wrangle the New Habitat</h3>
+        <p class="text-on-surface-variant max-w-sm mb-6">Crikey, this lease is a wild one! Gotta wrestle it into submission before we can set up camp in Melbourne.</p>
+        <button class="bg-primary text-on-primary font-label font-bold px-6 py-3 rounded-md flex items-center gap-2 hover:bg-primary-dim transition-colors active:scale-95 duration-200">
+          GRAB IT BY THE TAIL
+          <span class="material-symbols-outlined text-sm">description</span>
+        </button>
+      </div>
+      <div class="absolute -bottom-8 -right-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+        <span class="material-symbols-outlined text-[160px]">home_pin</span>
+      </div>
+    </div>
+
+    <!-- Moving Clock -->
+    <div class="md:col-span-4 bg-secondary-container rounded-xl p-6 flex flex-col gap-5 border-b-4 border-secondary/20">
+      <div>
+        <span class="material-symbols-outlined text-on-secondary-container mb-2">timer</span>
+        <h4 class="font-headline font-bold text-xl text-on-secondary-container">Migration Clock</h4>
+      </div>
+
+      <!-- Days to target -->
+      <div>
+        <div id="days-countdown" class="text-4xl font-headline font-black text-on-secondary-container">—</div>
+        <div class="font-label text-xs uppercase font-bold text-secondary">Days 'til Melbourne!</div>
+        <div class="font-label text-[10px] text-secondary/60 mt-0.5">Target: 1 Sep 2026</div>
+      </div>
+
+      <div class="h-px bg-secondary/20"></div>
+
+      <!-- Contracted date -->
+      <div>
+        <div class="font-label text-[10px] uppercase tracking-widest text-secondary/70 mb-1">Contracted Date</div>
+        <div class="font-headline font-black text-2xl text-on-secondary-container">1 Aug 2026</div>
+        <div class="font-label text-[10px] text-secondary/60 mt-0.5">Original deadline</div>
+      </div>
+
+      <div class="h-px bg-secondary/20"></div>
+
+      <!-- D90 days -->
+      <div>
+        <div class="font-label text-[10px] uppercase tracking-widest text-secondary/70 mb-1">D90 Days Left</div>
+        <div id="d90-countdown" class="font-headline font-black text-2xl text-on-secondary-container">—</div>
+        <div class="font-label text-[10px] text-secondary/60 mt-0.5">90 total − <span id="d90-used">—</span> used = buffer to extend move</div>
+      </div>
+    </div>
+
+    <!-- Task List -->
+    <div id="task-list" class="md:col-span-12 space-y-4 mt-4">
+      <!-- Steve's Wisdom -->
+      <div class="bg-primary-container/50 rounded-xl p-5 flex items-start gap-4 mb-6">
+        <div class="w-10 h-10 rounded-full overflow-hidden shrink-0 border-2 border-primary/20">
+          <img class="w-full h-full object-cover" src="./steve.jpg" alt="Steve"/>
+        </div>
+        <div>
+          <p class="font-headline font-bold text-sm text-primary italic">"I have no fear of losing my life. If I have to save a koala or a crocodile or a kangaroo or a snake, mate, I will save it."</p>
+          <p class="font-label text-[10px] text-primary/60 mt-2 uppercase tracking-widest">— Steve Irwin, Wildlife Warrior</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <h4 class="font-label text-primary font-black uppercase tracking-widest text-xs">Steve's Field Log</h4>
+        <button onclick="openAddTask()" class="flex items-center gap-1 bg-primary text-on-primary font-label text-[10px] font-black px-3 py-1.5 rounded-lg uppercase tracking-widest hover:bg-primary-dim transition-colors">
+          <span class="material-symbols-outlined text-sm">add</span> Add Task
+        </button>
+      </div>
+
+      <!-- Add Task Modal -->
+      <div id="add-task-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-on-surface/30 backdrop-blur-sm">
+        <div class="bg-surface w-full max-w-md rounded-2xl p-6 shadow-xl">
+          <h3 class="font-headline font-bold text-xl mb-4">New Task, Mate!</h3>
+          <input id="new-task-title" type="text" placeholder="What needs wrangling?" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <input id="new-task-desc" type="text" placeholder="Details..." class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <div class="flex gap-3">
+            <button onclick="closeAddTask()" class="flex-1 border border-outline-variant text-outline font-label font-bold text-sm py-3 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
+            <button onclick="submitAddTask()" class="flex-1 bg-primary text-on-primary font-label font-bold text-sm py-3 rounded-lg hover:bg-primary-dim transition-colors">Add Task</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task: Leonard / House Rental -->
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Engage Leonard for the Jansen Rental</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Crikey, gotta trap this bloke! Get engagement plan signed + healthy homes assessment sorted.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">real_estate_agent</span>
+      </div>
+
+      <!-- Task: Sell the Jansen -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Sell the Jansen</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Time to release this beauty back into the wild! Get her sold before the big migration.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">directions_car</span>
+      </div>
+
+      <!-- Task: Sort Interim Melbourne Rental -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Sort Interim Melbourne Rental</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Need a base camp while we hunt for the permanent habitat. Paying a pro to wrangle it.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">apartment</span>
+      </div>
+
+      <!-- Task: One Month in Windsor -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Book One Month in Windsor (Stay Urban Rest)</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">~3,300 NZD for July. Temporary den while we hunt for our permanent Melbourne habitat!</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">bed</span>
+      </div>
+
+      <!-- Task: Ship Gear via Sevenseas -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Ship Gear to Aus via Sevenseas</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Under 3,000 NZD with Sevenseas. Only pack what you don't need right away, mate!</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">local_shipping</span>
+      </div>
+
+      <!-- Task: Westpac Bank Account -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Set Up Westpac Bank Account</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Can't survive Down Under without a bank account, mate! Set up 14 days before we land.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">account_balance</span>
+      </div>
+
+      <!-- Task: Medicare Registration -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Medicare Registration</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Can't go wrangling wildlife without health cover! Register when we enter the country.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">medical_services</span>
+      </div>
+
+      <!-- Task: Australian Tax File Number -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Apply for Australian Tax File Number</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Every wildlife warrior needs their TFN! Apply at the ATO when we enter the country.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">description</span>
+      </div>
+
+      <!-- Task: Tell NZ IRD -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Let NZ IRD Know We're Leaving</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Not compulsory but good form, mate! Refer Miho's email for the details.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">send</span>
+      </div>
+
+      <!-- Task: Accountant -->
+      <div class="bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+        <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
+        </button>
+        <div class="flex-grow">
+          <div class="task-title font-headline font-bold text-lg">Get Accountant for Landlord & IRD Stuff</div>
+          <div class="task-desc text-sm text-on-surface-variant font-body">Even the Croc Hunter needed a mate to handle the paperwork! Findex is our guide.</div>
+        </div>
+        <div class="hidden md:block">
+          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        </div>
+        <span class="material-symbols-outlined text-outline-variant">calculate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Footer -->
+  <div class="mt-12 bg-primary rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
+    <div class="absolute -left-10 top-0 h-full w-40 bg-gradient-to-r from-primary-dim to-transparent opacity-50"></div>
+    <div class="relative z-10 text-center md:text-left">
+      <h3 class="font-headline font-black text-2xl text-on-primary uppercase italic mb-2">Too Dangerous Alone?</h3>
+      <p class="text-primary-fixed max-w-xs font-body">Even Steve had his crew! Round up your mates to help wrestle the heavy stuff into the truck.</p>
+    </div>
+    <button class="relative z-10 bg-secondary-fixed text-on-secondary-fixed font-label font-bold px-8 py-4 rounded-md uppercase tracking-wider hover:bg-tertiary-fixed transition-all active:scale-95 shadow-xl">
+      Call the Crew!
+    </button>
+  </div>
+</main>
+</div>
+
+<!-- ==================== PAGE: TIMELINE ==================== -->
+<div id="page-timeline" class="page">
+<main class="max-w-4xl mx-auto px-6 pt-8 pb-32">
+  <!-- Hero Header -->
+  <header class="mb-16 relative">
+    <div class="absolute -top-4 -left-4 w-24 h-24 bg-tertiary-container/20 rounded-xl -z-10 rotate-12"></div>
+    <p class="font-label text-secondary uppercase tracking-[0.3em] text-xs mb-2">Operation: Southern Migration</p>
+    <h2 class="font-headline font-black text-5xl md:text-7xl text-on-surface leading-none mb-4">THE GREAT <br/><span class="text-primary italic">MIGRATION</span></h2>
+    <div class="w-24 h-2 bg-primary mt-6"></div>
+  </header>
+
+  <!-- Vertical Timeline -->
+  <div class="relative">
+    <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 timeline-line opacity-30 transform md:-translate-x-1/2"></div>
+
+    <!-- Milestone 1: Packing -->
+    <section class="relative mb-24 md:flex md:justify-between md:items-center w-full">
+      <div class="hidden md:block w-[42%]"></div>
+      <div class="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
+        <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg transform rotate-3 outline outline-4 outline-surface">
+          <span class="material-symbols-outlined text-on-primary text-3xl">pest_control_rodent</span>
+        </div>
+      </div>
+      <div class="ml-16 md:ml-0 md:w-[42%]">
+        <div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group hover:bg-surface-variant transition-colors">
+          <div class="font-label text-[10px] text-primary font-bold mb-2">OCTOBER 15 - 30</div>
+          <h3 class="font-headline font-bold text-2xl mb-3 uppercase tracking-tight">Packing the Gear</h3>
+          <p class="text-sm text-on-surface-variant leading-relaxed mb-4">Right, we're gonna sneak up on these boxes real quiet-like. Crikey, look at the size of that wardrobe—she's a beauty!</p>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-surface-container-highest p-3 rounded-lg flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+              <span class="font-label text-[10px] font-bold">CARDBOARD SURPLUS</span>
+            </div>
+            <div class="bg-surface-container-highest p-3 rounded-lg flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-sm">label</span>
+              <span class="font-label text-[10px] font-bold">LABEL EVERYTHING</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milestone 2: Flights -->
+    <section class="relative mb-24 md:flex md:flex-row-reverse md:justify-between md:items-center w-full">
+      <div class="hidden md:block w-[42%]"></div>
+      <div class="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
+        <div class="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center shadow-lg transform -rotate-6 outline outline-4 outline-surface">
+          <span class="material-symbols-outlined text-on-secondary text-3xl">flight_takeoff</span>
+        </div>
+      </div>
+      <div class="ml-16 md:ml-0 md:w-[42%]">
+        <div class="bg-primary-container p-6 rounded-xl relative overflow-hidden border-l-4 border-primary">
+          <div class="font-label text-[10px] text-primary font-bold mb-2">NOVEMBER 02</div>
+          <h3 class="font-headline font-bold text-2xl mb-3 uppercase tracking-tight">Sky-High Transit</h3>
+          <p class="text-sm text-on-primary-container leading-relaxed mb-4">We're migrating south just like the wedge-tailed eagles, mate! Buckle in—this is gonna be one bonzer flight!</p>
+          <div class="flex items-center gap-4 bg-surface/40 p-3 rounded-lg backdrop-blur-sm">
+            <div class="h-10 w-10 bg-primary/20 rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary">airplane_ticket</span>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold font-label text-primary">FLIGHT STATUS</div>
+              <div class="text-sm font-headline font-black uppercase">Confirmed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Milestone 3: Landing -->
+    <section class="relative mb-24 md:flex md:justify-between md:items-center w-full">
+      <div class="hidden md:block w-[42%]"></div>
+      <div class="absolute left-6 md:left-1/2 -translate-x-1/2 z-10">
+        <div class="w-12 h-12 bg-tertiary-fixed rounded-xl flex items-center justify-center shadow-lg transform rotate-12 outline outline-4 outline-surface">
+          <span class="material-symbols-outlined text-on-tertiary-fixed text-3xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+        </div>
+      </div>
+      <div class="ml-16 md:ml-0 md:w-[42%]">
+        <div class="relative">
+          <div class="absolute -inset-1 bg-tertiary-container/30 blur-xl -z-10"></div>
+          <div class="bg-surface-container-highest p-6 rounded-xl overflow-hidden shadow-sm">
+            <div class="font-label text-[10px] text-tertiary font-bold mb-2">NOVEMBER 03 &amp; BEYOND</div>
+            <h3 class="font-headline font-bold text-2xl mb-3 uppercase tracking-tight">Touching Down</h3>
+            <p class="text-sm text-on-surface-variant leading-relaxed">Crikey, we made it! Welcome to Melbourne—now THIS is a wildlife sanctuary I can get excited about. Trams, laneways, and coffee—what a habitat!</p>
+            <div class="mt-6 h-32 rounded-lg bg-surface relative overflow-hidden group">
+              <img alt="Melbourne Skyline" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXYeJhIJ9Oac401P3W58npwzR9a_dJ7x92bEBQhrLYt6fxlzsab8o7z_u5La_-6OdU4iGfwYIBnjCFspJAPr8nNn2EKVMIFOtWUpBSKqxIf74X7NBRNNzQbre7ks0WFwRYqy89tdTHuhEx9x7_qSxIJDQ6DDVQ0AV9eXvqI8szKJy5LWg5F53Hh3RIePDx0Xl9uRAIvJqoM2DmRYaDoH8SUHblb8XfHdLRsWKWFe9rlwG9MxUH8-bWBIEBFU7E5k2SaQH50RIbnd-J"/>
+              <div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+              <div class="absolute bottom-3 left-3 flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-xs">map</span>
+                <span class="font-label text-[10px] text-white font-bold">NEW TERRITORY UNLOCKED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Steve's Moving Tips -->
+  <div class="mt-16 mb-8">
+    <div class="flex items-end gap-4 mb-6">
+      <h2 class="font-headline text-2xl font-black text-on-surface uppercase italic leading-none">Steve's Moving Tips</h2>
+      <div class="h-px bg-outline-variant/30 flex-grow mb-2"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-surface-container p-5 rounded-xl">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">psychology</span>
+        <h4 class="font-headline font-bold text-sm mb-2">Don't Panic, Mate!</h4>
+        <p class="text-xs text-on-surface-variant">"When you're in a sticky situation, stay calm. Same goes for packing—take it one box at a time."</p>
+      </div>
+      <div class="bg-surface-container p-5 rounded-xl">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">diversity_3</span>
+        <h4 class="font-headline font-bold text-sm mb-2">Rally Your Crew</h4>
+        <p class="text-xs text-on-surface-variant">"I never wrangle a croc alone. Get your mates involved—pizza and a few bevvies go a long way!"</p>
+      </div>
+      <div class="bg-surface-container p-5 rounded-xl">
+        <span class="material-symbols-outlined text-primary text-2xl mb-3 block">explore</span>
+        <h4 class="font-headline font-bold text-sm mb-2">Explore Your Habitat</h4>
+        <p class="text-xs text-on-surface-variant">"Melbourne's got the best coffee, street art, and footy. Get out there and discover your new territory!"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote CTA -->
+  <div class="mt-12 p-8 bg-secondary-container rounded-2xl flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+    <div class="absolute top-0 right-0 opacity-10">
+      <span class="material-symbols-outlined text-[120px]">footprint</span>
+    </div>
+    <div class="flex-1">
+      <p class="font-headline font-black text-2xl md:text-3xl text-on-secondary-container leading-tight italic">"I believe that education is all about being excited about something. And what's more exciting than a big move, mate?!"</p>
+      <p class="font-label text-xs uppercase tracking-widest mt-4 text-on-secondary-container/60">— Steve Irwin, The Crocodile Hunter</p>
+    </div>
+    <button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-headline font-bold uppercase tracking-widest hover:scale-105 transition-transform shrink-0">
+      Check Supplies
+    </button>
+  </div>
+</main>
+</div>
+
+<!-- ==================== PAGE: PROFILE ==================== -->
+<div id="page-profile" class="page">
+<main class="max-w-4xl mx-auto px-6 py-8 pb-32">
+  <!-- Profile Bento -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+    <!-- Ranger ID Card -->
+    <div class="md:col-span-7 bg-surface-container-lowest rounded-3xl p-8 flex flex-col justify-between shadow-[0_4px_20px_rgba(54,45,38,0.06)] relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/20 rounded-bl-full -mr-8 -mt-8"></div>
+      <div class="relative z-10">
+        <div class="flex items-start justify-between mb-8">
+          <div>
+            <span class="font-label text-xs uppercase tracking-[0.2em] text-secondary mb-1 block">Crocodile Hunter ID</span>
+            <h2 class="font-headline text-4xl font-black text-on-surface leading-none mb-2">Steve <br/>Irwin</h2>
+            <div class="flex items-center gap-2 mt-4 bg-tertiary-container px-3 py-1.5 rounded-xl w-fit">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+              <span class="font-label text-[10px] font-bold uppercase tracking-widest text-on-tertiary-container">Melbourne Bound</span>
+            </div>
+          </div>
+          <div class="w-24 h-24 rounded-2xl bg-surface-container-highest flex items-center justify-center border-4 border-surface overflow-hidden rotate-3 group-hover:rotate-0 transition-transform duration-500">
+            <img class="w-full h-full object-cover" src="./steve.jpg" alt="Steve Irwin"/>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mt-8 relative z-10">
+        <div class="bg-surface-container-low p-4 rounded-2xl">
+          <span class="font-label text-[10px] uppercase text-outline block mb-1">Current Habitat</span>
+          <p class="font-headline font-bold text-primary">Queensland → VIC</p>
+        </div>
+        <div class="bg-surface-container-low p-4 rounded-2xl">
+          <span class="font-label text-[10px] uppercase text-outline block mb-1">Ranger Rank</span>
+          <p class="font-headline font-bold text-primary">Crocodile Hunter</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="md:col-span-5 bg-primary text-on-primary rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden">
+      <div class="absolute -bottom-10 -right-10 opacity-10 rotate-12">
+        <span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">pet_supplies</span>
+      </div>
+      <h3 class="font-label text-xs uppercase tracking-[0.2em] mb-6 opacity-80">Wildlife Warrior Stats</h3>
+      <div class="space-y-6">
+        <div>
+          <p class="text-4xl font-headline font-black">1,437</p>
+          <p class="font-label text-[10px] uppercase tracking-widest opacity-70">Crocs Wrangled</p>
+        </div>
+        <div class="h-px bg-on-primary/10"></div>
+        <div>
+          <p class="text-4xl font-headline font-black">12,402</p>
+          <p class="font-label text-[10px] uppercase tracking-widest opacity-70">Km Across the Outback</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steve's Famous Quotes -->
+  <section class="mb-12">
+    <div class="bg-secondary-container/40 rounded-2xl p-6">
+      <h3 class="font-label text-xs uppercase tracking-[0.2em] text-secondary mb-4">Steve's Greatest Hits</h3>
+      <div class="space-y-4">
+        <div class="flex items-start gap-3">
+          <span class="text-tertiary-container text-xl mt-1">&#x1F40A;</span>
+          <p class="text-sm text-on-surface italic font-body">"Crocodiles are easy. They try to kill and eat you. People are harder. Sometimes they pretend to be your friend first."</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-tertiary-container text-xl mt-1">&#x1F333;</span>
+          <p class="text-sm text-on-surface italic font-body">"I'm a wildlife warrior. My job is to protect the wildlife and wild places. And that includes protecting your furniture during the move!"</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="text-tertiary-container text-xl mt-1">&#x2764;</span>
+          <p class="text-sm text-on-surface italic font-body">"The thing about Steve is, every single animal—whether it's a snail or a crocodile—Steve loved it like it was the most important creature on the planet."</p>
+          <span class="text-[10px] text-outline font-label">— Terri Irwin</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wild Alerts -->
+  <section class="mb-16">
+    <div class="flex items-end gap-4 mb-8">
+      <h2 class="font-headline text-3xl font-black text-on-surface uppercase italic leading-none">Wild Alerts</h2>
+      <div class="h-px bg-outline-variant/30 flex-grow mb-2"></div>
+    </div>
+    <div class="bg-surface-container rounded-3xl overflow-hidden p-2">
+      <div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl mb-2 transition-all hover:bg-surface-container-low">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+            <span class="material-symbols-outlined">notifications_active</span>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-lg">Danger Danger!</p>
+            <p class="text-sm text-outline">Alerts when things get a bit too spicy, mate</p>
+          </div>
+        </div>
+        <div class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center justify-end">
+          <div class="w-4 h-4 bg-on-primary rounded-full"></div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl mb-2 transition-all hover:bg-surface-container-low">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined">water_drop</span>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-lg">Melbourne Weather Watch</p>
+            <p class="text-sm text-outline">Four seasons in one day—classic Melbourne!</p>
+          </div>
+        </div>
+        <div class="w-12 h-6 bg-surface-variant rounded-full relative p-1 flex items-center justify-start">
+          <div class="w-4 h-4 bg-outline rounded-full"></div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between p-6 bg-surface-container-lowest rounded-2xl transition-all hover:bg-surface-container-low">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+            <span class="material-symbols-outlined">campaign</span>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-lg">Wildlife Warriors</p>
+            <p class="text-sm text-outline">Updates from the Australia Zoo family</p>
+          </div>
+        </div>
+        <div class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center justify-end">
+          <div class="w-4 h-4 bg-on-primary rounded-full"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Account Kit -->
+  <section>
+    <div class="flex items-end gap-4 mb-8">
+      <h2 class="font-headline text-3xl font-black text-on-surface uppercase italic leading-none">Account Kit</h2>
+      <div class="h-px bg-outline-variant/30 flex-grow mb-2"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <button class="flex items-center gap-4 p-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/15 hover:border-primary/30 transition-colors text-left group">
+        <div class="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+          <span class="material-symbols-outlined">lock</span>
+        </div>
+        <div>
+          <p class="font-headline font-bold">Secure Protocol</p>
+          <p class="font-label text-[10px] uppercase tracking-widest text-outline">Manage Password</p>
+        </div>
+      </button>
+      <button class="flex items-center gap-4 p-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/15 hover:border-primary/30 transition-colors text-left group">
+        <div class="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+          <span class="material-symbols-outlined">location_on</span>
+        </div>
+        <div>
+          <p class="font-headline font-bold">Base Camp</p>
+          <p class="font-label text-[10px] uppercase tracking-widest text-outline">Australia Zoo → Melbourne</p>
+        </div>
+      </button>
+      <button class="flex items-center gap-4 p-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/15 hover:border-primary/30 transition-colors text-left group">
+        <div class="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+          <span class="material-symbols-outlined">language</span>
+        </div>
+        <div>
+          <p class="font-headline font-bold">Field Dialect</p>
+          <p class="font-label text-[10px] uppercase tracking-widest text-outline">Language: English (AU)</p>
+        </div>
+      </button>
+      <button class="flex items-center gap-4 p-6 bg-error/5 rounded-3xl border border-error/10 hover:bg-error/10 transition-colors text-left group">
+        <div class="w-12 h-12 rounded-2xl bg-error/10 flex items-center justify-center text-error group-hover:bg-error group-hover:text-on-error transition-all">
+          <span class="material-symbols-outlined">logout</span>
+        </div>
+        <div>
+          <p class="font-headline font-bold text-error">Release Into the Wild</p>
+          <p class="font-label text-[10px] uppercase tracking-widest text-error/60">Log Out — See Ya Later, Mate!</p>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <footer class="mt-20 text-center">
+    <div class="mb-4 opacity-60">
+      <p class="font-headline font-bold text-sm italic text-primary">"We don't own the planet Earth, we belong to it. And we must share it with our wildlife."</p>
+      <p class="font-label text-[10px] mt-1 text-secondary uppercase tracking-widest">— Steve Irwin (1962–2006)</p>
+    </div>
+    <div class="opacity-30">
+      <p class="font-label text-[10px] uppercase tracking-[0.3em]">Crocodile Hunter Console v4.2.0-VIC</p>
+      <p class="font-label text-[8px] mt-1">Made with love from Australia Zoo to Melbourne</p>
+      <p class="font-label text-[8px] mt-1">Wildlife Warriors Forever &#x1F40A;</p>
+    </div>
+  </footer>
+</main>
+</div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pb-safe pt-2 px-4 bg-[#fff4ee]/80 backdrop-blur-md border-t border-[#b9aba0]/15 shadow-[0_-4px_20px_rgba(54,45,38,0.08)] rounded-t-3xl">
+  <a onclick="switchPage('tasks')" class="nav-link flex flex-col items-center justify-center px-6 py-2 rounded-xl transition-all cursor-pointer" data-page="tasks">
+    <span class="material-symbols-outlined mb-1">assignment</span>
+    <span class="font-['Space_Grotesk'] text-[10px] uppercase font-bold tracking-widest">Tasks</span>
+  </a>
+  <a onclick="switchPage('timeline')" class="nav-link flex flex-col items-center justify-center px-6 py-2 rounded-xl transition-all cursor-pointer" data-page="timeline">
+    <span class="material-symbols-outlined mb-1">timeline</span>
+    <span class="font-['Space_Grotesk'] text-[10px] uppercase font-bold tracking-widest">Timeline</span>
+  </a>
+  <a onclick="switchPage('profile')" class="nav-link flex flex-col items-center justify-center px-6 py-2 rounded-xl transition-all cursor-pointer" data-page="profile">
+    <span class="material-symbols-outlined mb-1">person</span>
+    <span class="font-['Space_Grotesk'] text-[10px] uppercase font-bold tracking-widest">Profile</span>
+  </a>
+</nav>
+
+<script>
+function switchPage(page) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target page
+  document.getElementById('page-' + page).classList.add('active');
+
+  // Update nav styling
+  document.querySelectorAll('.nav-link').forEach(link => {
+    if (link.dataset.page === page) {
+      link.classList.add('bg-[#526047]', 'text-[#fff4ee]');
+      link.classList.remove('text-[#526047]', 'hover:text-[#745716]');
+      link.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+    } else {
+      link.classList.remove('bg-[#526047]', 'text-[#fff4ee]');
+      link.classList.add('text-[#526047]', 'hover:text-[#745716]');
+      link.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
+    }
+  });
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+// Initialize nav state
+switchPage('tasks');
+
+// ── Progress bar ──────────────────────────────────────────
+function updateProgress() {
+  const btns = document.querySelectorAll('.task-btn');
+  const done = document.querySelectorAll('.task-btn.done').length;
+  const pct = btns.length ? Math.round((done / btns.length) * 100) : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+// ── Task checkbox toggle ───────────────────────────────────
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.task-btn');
+  if (!btn) return;
+  const row = btn.closest('.task-row');
+  const isDone = btn.classList.toggle('done');
+
+  if (isDone) {
+    btn.classList.remove('border-2', 'border-primary/30', 'hover:bg-primary-container');
+    btn.classList.add('bg-primary');
+    btn.querySelector('.material-symbols-outlined').style.opacity = '1';
+    btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+    row?.querySelectorAll('.task-title, .task-desc').forEach(el => el.classList.add('line-through', 'opacity-50'));
+  } else {
+    btn.classList.add('border-2', 'border-primary/30', 'hover:bg-primary-container');
+    btn.classList.remove('bg-primary');
+    btn.querySelector('.material-symbols-outlined').style.opacity = '0';
+    btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
+    row?.querySelectorAll('.task-title, .task-desc').forEach(el => el.classList.remove('line-through', 'opacity-50'));
+  }
+  updateProgress();
+});
+
+// ── Add task ──────────────────────────────────────────────
+function openAddTask() {
+  document.getElementById('add-task-modal').classList.remove('hidden');
+  document.getElementById('new-task-title').focus();
+}
+function closeAddTask() {
+  document.getElementById('add-task-modal').classList.add('hidden');
+  document.getElementById('new-task-title').value = '';
+  document.getElementById('new-task-desc').value = '';
+}
+function submitAddTask() {
+  const title = document.getElementById('new-task-title').value.trim();
+  const desc = document.getElementById('new-task-desc').value.trim();
+  if (!title) return;
+
+  const row = document.createElement('div');
+  row.className = 'task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group';
+  row.innerHTML = `
+    <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
+      <span class="material-symbols-outlined text-xl" style="opacity:0">check_circle</span>
+    </button>
+    <div class="flex-grow">
+      <div class="task-title font-headline font-bold text-lg">${title}</div>
+      ${desc ? `<div class="task-desc text-sm text-on-surface-variant font-body">${desc}</div>` : ''}
+    </div>
+    <div class="hidden md:block">
+      <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+    </div>
+    <span class="material-symbols-outlined text-outline-variant">task_alt</span>
+  `;
+  document.getElementById('task-list').appendChild(row);
+  updateProgress();
+  closeAddTask();
+}
+
+// Close modal on backdrop click
+document.getElementById('add-task-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeAddTask();
+});
+
+// Close modal on Enter key
+document.getElementById('new-task-desc').addEventListener('keydown', e => { if (e.key === 'Enter') submitAddTask(); });
+document.getElementById('new-task-title').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('new-task-desc').focus(); });
+
+// Init progress
+updateProgress();
+
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
+
+// Migration countdown to 1 Sep 2026
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const target = new Date('2026-09-01');
+const days = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+document.getElementById('days-countdown').textContent = days;
+
+// D90 days — 90 total, 33 used, 57 remaining
+const d90Total = 90;
+const d90Used = 33;
+const d90Left = d90Total - d90Used;
+document.getElementById('d90-countdown').textContent = d90Left;
+document.getElementById('d90-used').textContent = d90Used;
+</script>
+
+</body></html>
