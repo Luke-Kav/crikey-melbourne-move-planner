@@ -1,8 +1,8 @@
 const CACHE = 'crikey-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/steve.jpg'
+  '/crikey-melbourne-move-planner/',
+  '/crikey-melbourne-move-planner/index.html',
+  '/crikey-melbourne-move-planner/steve.jpg'
 ];
 
 self.addEventListener('install', e => {
