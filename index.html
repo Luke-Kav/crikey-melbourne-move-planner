@@ -218,6 +218,19 @@ tailwind.config = {
         </button>
       </div>
 
+      <!-- Edit Task Modal -->
+      <div id="edit-task-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-on-surface/30 backdrop-blur-sm">
+        <div class="bg-surface w-full max-w-md rounded-2xl p-6 shadow-xl">
+          <h3 class="font-headline font-bold text-xl mb-4">Edit Task</h3>
+          <input id="edit-task-title" type="text" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <input id="edit-task-desc" type="text" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <div class="flex gap-3">
+            <button onclick="closeEditTask()" class="flex-1 border border-outline-variant text-outline font-label font-bold text-sm py-3 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
+            <button onclick="submitEditTask()" class="flex-1 bg-primary text-on-primary font-label font-bold text-sm py-3 rounded-lg hover:bg-primary-dim transition-colors">Save</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Add Task Modal -->
       <div id="add-task-modal" class="hidden fixed inset-0 z-50 flex items-end md:items-center justify-center p-4 bg-on-surface/30 backdrop-blur-sm">
         <div class="bg-surface w-full max-w-md rounded-2xl p-6 shadow-xl">
@@ -243,6 +256,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">real_estate_agent</span>
       </div>
 
@@ -258,6 +274,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">directions_car</span>
       </div>
 
@@ -273,6 +292,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">apartment</span>
       </div>
 
@@ -288,6 +310,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">bed</span>
       </div>
 
@@ -303,6 +328,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">local_shipping</span>
       </div>
 
@@ -318,6 +346,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">account_balance</span>
       </div>
 
@@ -333,6 +364,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">medical_services</span>
       </div>
 
@@ -348,6 +382,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">description</span>
       </div>
 
@@ -363,6 +400,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">send</span>
       </div>
 
@@ -378,6 +418,9 @@ tailwind.config = {
         <div class="hidden md:block">
           <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
         </div>
+        <button class="edit-btn opacity-0 group-hover:opacity-100 transition-opacity w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+          <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
         <span class="material-symbols-outlined text-outline-variant">calculate</span>
       </div>
     </div>
@@ -798,6 +841,43 @@ document.addEventListener('click', function(e) {
   }
   updateProgress();
 });
+
+// ── Edit task ─────────────────────────────────────────────
+let editingRow = null;
+
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.edit-btn');
+  if (!btn) return;
+  editingRow = btn.closest('.task-row');
+  const title = editingRow.querySelector('.task-title').textContent;
+  const desc = editingRow.querySelector('.task-desc')?.textContent || '';
+  document.getElementById('edit-task-title').value = title;
+  document.getElementById('edit-task-desc').value = desc;
+  document.getElementById('edit-task-modal').classList.remove('hidden');
+  document.getElementById('edit-task-title').focus();
+});
+
+function closeEditTask() {
+  document.getElementById('edit-task-modal').classList.add('hidden');
+  editingRow = null;
+}
+
+function submitEditTask() {
+  if (!editingRow) return;
+  const title = document.getElementById('edit-task-title').value.trim();
+  const desc = document.getElementById('edit-task-desc').value.trim();
+  if (!title) return;
+  editingRow.querySelector('.task-title').textContent = title;
+  const descEl = editingRow.querySelector('.task-desc');
+  if (descEl) descEl.textContent = desc;
+  closeEditTask();
+}
+
+document.getElementById('edit-task-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditTask();
+});
+document.getElementById('edit-task-title').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('edit-task-desc').focus(); });
+document.getElementById('edit-task-desc').addEventListener('keydown', e => { if (e.key === 'Enter') submitEditTask(); });
 
 // ── Add task ──────────────────────────────────────────────
 function openAddTask() {
