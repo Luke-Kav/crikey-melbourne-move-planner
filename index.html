@@ -94,6 +94,10 @@ tailwind.config = {
   .page { display: none; }
   .page.active { display: block; }
   body { min-height: 100dvh; }
+  .task-row.drag-over { outline: 2px dashed #526047; outline-offset: 2px; background: #e1f0d0; }
+  .task-row.dragging { opacity: 0.45; }
+  .drag-handle { touch-action: none; cursor: grab; }
+  .drag-handle:active { cursor: grabbing; }
 </style>
 </head>
 
@@ -223,7 +227,13 @@ tailwind.config = {
         <div class="bg-surface w-full max-w-md rounded-2xl p-6 shadow-xl">
           <h3 class="font-headline font-bold text-xl mb-4">Edit Task</h3>
           <input id="edit-task-title" type="text" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
-          <input id="edit-task-desc" type="text" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <input id="edit-task-desc" type="text" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <select id="edit-task-priority" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low">
+            <option value="critical">🔴 Crikey! — Critical</option>
+            <option value="high">🟠 Hot Zone — High</option>
+            <option value="medium">🟡 G'Day — Medium</option>
+            <option value="low">🟢 No Worries — Low</option>
+          </select>
           <div class="flex gap-3">
             <button onclick="closeEditTask()" class="flex-1 border border-outline-variant text-outline font-label font-bold text-sm py-3 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
             <button onclick="submitEditTask()" class="flex-1 bg-primary text-on-primary font-label font-bold text-sm py-3 rounded-lg hover:bg-primary-dim transition-colors">Save</button>
@@ -236,7 +246,13 @@ tailwind.config = {
         <div class="bg-surface w-full max-w-md rounded-2xl p-6 shadow-xl">
           <h3 class="font-headline font-bold text-xl mb-4">New Task, Mate!</h3>
           <input id="new-task-title" type="text" placeholder="What needs wrangling?" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
-          <input id="new-task-desc" type="text" placeholder="Details..." class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <input id="new-task-desc" type="text" placeholder="Details..." class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-3 focus:outline-none focus:border-primary bg-surface-container-low" />
+          <select id="new-task-priority" class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body text-sm mb-4 focus:outline-none focus:border-primary bg-surface-container-low">
+            <option value="critical">🔴 Crikey! — Critical</option>
+            <option value="high">🟠 Hot Zone — High</option>
+            <option value="medium" selected>🟡 G'Day — Medium</option>
+            <option value="low">🟢 No Worries — Low</option>
+          </select>
           <div class="flex gap-3">
             <button onclick="closeAddTask()" class="flex-1 border border-outline-variant text-outline font-label font-bold text-sm py-3 rounded-lg hover:bg-surface-container transition-colors">Cancel</button>
             <button onclick="submitAddTask()" class="flex-1 bg-primary text-on-primary font-label font-bold text-sm py-3 rounded-lg hover:bg-primary-dim transition-colors">Add Task</button>
@@ -245,7 +261,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Leonard / House Rental -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -253,8 +272,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Engage Leonard for the Jansen Rental</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Crikey, gotta trap this bloke! Get engagement plan signed + healthy homes assessment sorted.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-error-container text-on-error-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="critical">Crikey!</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -266,7 +285,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Sell the Jansen -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -274,8 +296,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Sell the Jansen</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Time to release this beauty back into the wild! Get her sold before the big migration.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="high">Hot Zone</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -287,7 +309,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Sort Interim Melbourne Rental -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -295,8 +320,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Sort Interim Melbourne Rental</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Need a base camp while we hunt for the permanent habitat. Paying a pro to wrangle it.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">Ready to Pounce</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-error-container text-on-error-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="critical">Crikey!</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -308,7 +333,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: One Month in Windsor -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -316,8 +344,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Book One Month in Windsor (Stay Urban Rest)</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">~3,300 NZD for July. Temporary den while we hunt for our permanent Melbourne habitat!</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="high">Hot Zone</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -329,7 +357,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Ship Gear via Sevenseas -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -337,8 +368,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Ship Gear to Aus via Sevenseas</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Under 3,000 NZD with Sevenseas. Only pack what you don't need right away, mate!</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-secondary-container text-on-secondary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="medium">G'Day</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -350,7 +381,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Westpac Bank Account -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -358,8 +392,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Set Up Westpac Bank Account</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Can't survive Down Under without a bank account, mate! Set up 14 days before we land.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="high">Hot Zone</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -371,7 +405,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Medicare Registration -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -379,8 +416,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Medicare Registration</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Can't go wrangling wildlife without health cover! Register when we enter the country.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="high">Hot Zone</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -392,7 +429,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Australian Tax File Number -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -400,8 +440,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Apply for Australian Tax File Number</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Every wildlife warrior needs their TFN! Apply at the ATO when we enter the country.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-tertiary-container text-on-tertiary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="high">Hot Zone</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -413,7 +453,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Tell NZ IRD -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -421,8 +464,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Let NZ IRD Know We're Leaving</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Not compulsory but good form, mate! Refer Miho's email for the details.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-primary-container text-on-primary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="low">No Worries</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -434,7 +477,10 @@ tailwind.config = {
       </div>
 
       <!-- Task: Accountant -->
-      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group">
+      <div class="task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group" draggable="true">
+        <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+          <span class="material-symbols-outlined text-lg">drag_indicator</span>
+        </button>
         <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-xl opacity-0 group-hover:opacity-100">check_circle</span>
         </button>
@@ -442,8 +488,8 @@ tailwind.config = {
           <div class="task-title font-headline font-bold text-lg">Get Accountant for Landlord & IRD Stuff</div>
           <div class="task-desc text-sm text-on-surface-variant font-body">Even the Croc Hunter needed a mate to handle the paperwork! Findex is our guide.</div>
         </div>
-        <div class="hidden md:block">
-          <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+        <div class="hidden md:block priority-badge-container">
+          <span class="priority-badge bg-secondary-container text-on-secondary-container font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="medium">G'Day</span>
         </div>
         <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
           <span class="material-symbols-outlined text-lg">edit</span>
@@ -881,6 +927,18 @@ document.addEventListener('click', function(e) {
   updateProgress();
 });
 
+// ── Priority badge helper ──────────────────────────────────
+const PRIORITY_CONFIG = {
+  critical: { label: "Crikey!",    cls: "bg-error-container text-on-error-container" },
+  high:     { label: "Hot Zone",   cls: "bg-tertiary-container text-on-tertiary-container" },
+  medium:   { label: "G\u2019Day", cls: "bg-secondary-container text-on-secondary-container" },
+  low:      { label: "No Worries", cls: "bg-primary-container text-on-primary-container" },
+};
+function priorityBadgeHTML(priority) {
+  const p = PRIORITY_CONFIG[priority] || PRIORITY_CONFIG.medium;
+  return `<span class="priority-badge ${p.cls} font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest" data-priority="${priority}">${p.label}</span>`;
+}
+
 // ── Edit task ─────────────────────────────────────────────
 let editingRow = null;
 
@@ -890,8 +948,11 @@ document.addEventListener('click', function(e) {
   editingRow = btn.closest('.task-row');
   const title = editingRow.querySelector('.task-title').textContent;
   const desc = editingRow.querySelector('.task-desc')?.textContent || '';
+  const badge = editingRow.querySelector('.priority-badge');
+  const priority = badge?.dataset.priority || 'medium';
   document.getElementById('edit-task-title').value = title;
   document.getElementById('edit-task-desc').value = desc;
+  document.getElementById('edit-task-priority').value = priority;
   document.getElementById('edit-task-modal').classList.remove('hidden');
   document.getElementById('edit-task-title').focus();
 });
@@ -905,10 +966,13 @@ function submitEditTask() {
   if (!editingRow) return;
   const title = document.getElementById('edit-task-title').value.trim();
   const desc = document.getElementById('edit-task-desc').value.trim();
+  const priority = document.getElementById('edit-task-priority').value;
   if (!title) return;
   editingRow.querySelector('.task-title').textContent = title;
   const descEl = editingRow.querySelector('.task-desc');
   if (descEl) descEl.textContent = desc;
+  const badgeContainer = editingRow.querySelector('.priority-badge-container');
+  if (badgeContainer) badgeContainer.innerHTML = priorityBadgeHTML(priority);
   closeEditTask();
 }
 
@@ -931,11 +995,16 @@ function closeAddTask() {
 function submitAddTask() {
   const title = document.getElementById('new-task-title').value.trim();
   const desc = document.getElementById('new-task-desc').value.trim();
+  const priority = document.getElementById('new-task-priority').value;
   if (!title) return;
 
   const row = document.createElement('div');
   row.className = 'task-row bg-surface-container-low hover:bg-surface-variant transition-colors p-4 rounded-xl flex items-center gap-6 group';
+  row.setAttribute('draggable', 'true');
   row.innerHTML = `
+    <button class="drag-handle w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant/50 hover:text-outline transition-all">
+      <span class="material-symbols-outlined text-lg">drag_indicator</span>
+    </button>
     <button class="task-btn w-8 h-8 rounded-lg border-2 border-primary/30 flex items-center justify-center text-primary hover:bg-primary-container transition-all">
       <span class="material-symbols-outlined text-xl" style="opacity:0">check_circle</span>
     </button>
@@ -943,9 +1012,15 @@ function submitAddTask() {
       <div class="task-title font-headline font-bold text-lg">${title}</div>
       ${desc ? `<div class="task-desc text-sm text-on-surface-variant font-body">${desc}</div>` : ''}
     </div>
-    <div class="hidden md:block">
-      <span class="bg-outline-variant/20 text-outline font-label text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest">In the Bush</span>
+    <div class="hidden md:block priority-badge-container">
+      ${priorityBadgeHTML(priority)}
     </div>
+    <button class="edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-primary hover:bg-primary-container transition-all">
+      <span class="material-symbols-outlined text-lg">edit</span>
+    </button>
+    <button class="delete-btn w-8 h-8 rounded-lg flex items-center justify-center text-outline-variant hover:text-error hover:bg-error-container/30 transition-all">
+      <span class="material-symbols-outlined text-lg">delete</span>
+    </button>
     <span class="material-symbols-outlined text-outline-variant">task_alt</span>
   `;
   document.getElementById('task-list').appendChild(row);
@@ -961,6 +1036,92 @@ document.getElementById('add-task-modal').addEventListener('click', function(e) 
 // Close modal on Enter key
 document.getElementById('new-task-desc').addEventListener('keydown', e => { if (e.key === 'Enter') submitAddTask(); });
 document.getElementById('new-task-title').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('new-task-desc').focus(); });
+
+// ── Drag and drop (desktop) ───────────────────────────────
+let dragSrc = null;
+
+document.addEventListener('dragstart', function(e) {
+  const row = e.target.closest('.task-row');
+  if (!row) return;
+  // Only start drag if initiated from the drag handle or the row itself
+  dragSrc = row;
+  row.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+});
+
+document.addEventListener('dragend', function(e) {
+  const row = e.target.closest('.task-row');
+  if (row) row.classList.remove('dragging');
+  document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+  dragSrc = null;
+});
+
+document.addEventListener('dragover', function(e) {
+  const row = e.target.closest('.task-row');
+  if (!row || row === dragSrc) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+  row.classList.add('drag-over');
+});
+
+document.addEventListener('dragleave', function(e) {
+  const row = e.target.closest('.task-row');
+  if (row && !row.contains(e.relatedTarget)) row.classList.remove('drag-over');
+});
+
+document.addEventListener('drop', function(e) {
+  const row = e.target.closest('.task-row');
+  if (!row || row === dragSrc || !dragSrc) return;
+  e.preventDefault();
+  const rect = row.getBoundingClientRect();
+  if (e.clientY < rect.top + rect.height / 2) {
+    row.parentNode.insertBefore(dragSrc, row);
+  } else {
+    row.parentNode.insertBefore(dragSrc, row.nextSibling);
+  }
+  row.classList.remove('drag-over');
+  updateProgress();
+});
+
+// ── Drag and drop (touch) ─────────────────────────────────
+let touchDragSrc = null;
+
+document.addEventListener('touchstart', function(e) {
+  const handle = e.target.closest('.drag-handle');
+  if (!handle) return;
+  touchDragSrc = handle.closest('.task-row');
+  if (touchDragSrc) touchDragSrc.classList.add('dragging');
+}, { passive: true });
+
+document.addEventListener('touchmove', function(e) {
+  if (!touchDragSrc) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const targetRow = el?.closest('.task-row');
+  document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+  if (targetRow && targetRow !== touchDragSrc) targetRow.classList.add('drag-over');
+}, { passive: false });
+
+document.addEventListener('touchend', function(e) {
+  if (!touchDragSrc) return;
+  const touch = e.changedTouches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const targetRow = el?.closest('.task-row');
+  if (targetRow && targetRow !== touchDragSrc) {
+    const rect = targetRow.getBoundingClientRect();
+    if (touch.clientY < rect.top + rect.height / 2) {
+      targetRow.parentNode.insertBefore(touchDragSrc, targetRow);
+    } else {
+      targetRow.parentNode.insertBefore(touchDragSrc, targetRow.nextSibling);
+    }
+  }
+  touchDragSrc.classList.remove('dragging');
+  document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
+  touchDragSrc = null;
+  updateProgress();
+});
 
 // Init progress
 updateProgress();
