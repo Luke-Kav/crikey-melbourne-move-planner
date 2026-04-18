@@ -1086,12 +1086,15 @@ document.addEventListener('drop', function(e) {
 
 // ── Drag and drop (touch) ─────────────────────────────────
 let touchDragSrc = null;
+let touchDragTarget = null;
+let touchDragBefore = true;
 
 document.addEventListener('touchstart', function(e) {
   const handle = e.target.closest('.drag-handle');
   if (!handle) return;
   e.preventDefault();
   touchDragSrc = handle.closest('.task-row');
+  touchDragTarget = null;
   if (touchDragSrc) touchDragSrc.classList.add('dragging');
 }, { passive: false });
 
@@ -1102,25 +1105,29 @@ document.addEventListener('touchmove', function(e) {
   const el = document.elementFromPoint(touch.clientX, touch.clientY);
   const targetRow = el?.closest('.task-row');
   document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
-  if (targetRow && targetRow !== touchDragSrc) targetRow.classList.add('drag-over');
+  if (targetRow && targetRow !== touchDragSrc) {
+    targetRow.classList.add('drag-over');
+    const rect = targetRow.getBoundingClientRect();
+    touchDragTarget = targetRow;
+    touchDragBefore = touch.clientY < rect.top + rect.height / 2;
+  } else {
+    touchDragTarget = null;
+  }
 }, { passive: false });
 
 document.addEventListener('touchend', function(e) {
   if (!touchDragSrc) return;
-  const touch = e.changedTouches[0];
-  const el = document.elementFromPoint(touch.clientX, touch.clientY);
-  const targetRow = el?.closest('.task-row');
-  if (targetRow && targetRow !== touchDragSrc) {
-    const rect = targetRow.getBoundingClientRect();
-    if (touch.clientY < rect.top + rect.height / 2) {
-      targetRow.parentNode.insertBefore(touchDragSrc, targetRow);
+  if (touchDragTarget) {
+    if (touchDragBefore) {
+      touchDragTarget.parentNode.insertBefore(touchDragSrc, touchDragTarget);
     } else {
-      targetRow.parentNode.insertBefore(touchDragSrc, targetRow.nextSibling);
+      touchDragTarget.parentNode.insertBefore(touchDragSrc, touchDragTarget.nextSibling);
     }
   }
   touchDragSrc.classList.remove('dragging');
   document.querySelectorAll('.task-row').forEach(r => r.classList.remove('drag-over'));
   touchDragSrc = null;
+  touchDragTarget = null;
   updateProgress();
 });
 
