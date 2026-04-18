@@ -1090,9 +1090,10 @@ let touchDragSrc = null;
 document.addEventListener('touchstart', function(e) {
   const handle = e.target.closest('.drag-handle');
   if (!handle) return;
+  e.preventDefault();
   touchDragSrc = handle.closest('.task-row');
   if (touchDragSrc) touchDragSrc.classList.add('dragging');
-}, { passive: true });
+}, { passive: false });
 
 document.addEventListener('touchmove', function(e) {
   if (!touchDragSrc) return;
